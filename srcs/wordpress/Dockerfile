@@ -32,14 +32,9 @@ RUN curl -fsSL -o /usr/local/bin/wp \
         && chmod +x /usr/local/bin/wp
 
 # ── PHP-FPM pool config (listen on TCP so nginx can reach it) ─────────────
-#COPY www.conf /etc/php83/php-fpm.d/www.conf
 RUN find /etc -name www.conf -exec sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' {} \;
 
-COPY wp-setup.sh /usr/local/bin/wp-setup.sh
+COPY wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
 
-WORKDIR /var/www/html
-EXPOSE 9000
-
 ENTRYPOINT ["/usr/local/bin/wp-setup.sh"]
-CMD ["php-fpm83", "--nodaemonize"]
