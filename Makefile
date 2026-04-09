@@ -1,7 +1,7 @@
 LOGIN 		= $(shell grep LOGIN .env | cut -d '=' -f2)
 DOMAIN		= $(shell grep DOMAIN_NAME .env | cut -d '=' -f2)
 
-DATA_DIR	= /home/$(LOGIN)/data
+DATA_DIR	= /home/bde-mada/data
 
 all:
 	@echo "Checking the prerequisites:"
@@ -31,8 +31,7 @@ all:
 	@echo "Building the project..."
 	docker compose -f srcs/docker-compose.yml up -d --build
 
-up:
-	docker compose -f srcs/docker-compose.yml -p inception up -d
+up: all
 
 down:
 	docker compose -f srcs/docker-compose.yml -p inception down
@@ -41,8 +40,8 @@ clean:
 	docker compose -f srcs/docker-compose.yml -p inception down --rmi all -v
 
 fclean: clean
-	echo "rm -rf $(DATA_DIR)/mariadb/*"
-	echo "rm -rf $(DATA_DIR)/wordpress/*"
+	rm -rf $(DATA_DIR)/mariadb/*
+	rm -rf $(DATA_DIR)/wordpress/*
 	docker system prune -af
 
 re: fclean all
