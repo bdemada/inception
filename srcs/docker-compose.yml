@@ -75,7 +75,6 @@ secrets:
 volumes:
   mariadb_data:
   wp_data:
-  ssl_certs:
 
 # ── Single network ────────────────────────────────────────────────────────
 networks:

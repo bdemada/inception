@@ -30,6 +30,11 @@ all:
 	@echo "Prerequisites validated."
 	@echo "Building the project..."
 	docker compose -f srcs/docker-compose.yml up -d --build
+	@echo "Application running successfully"
+	@echo "You can access pressing ctrl+click on the following link"
+	@echo "https://$(DOMAIN)"
+	@echo "Access the admin portal here"
+	@echo "https://$(DOMAIN)/wp-admin"
 
 up: all
 
@@ -47,6 +52,6 @@ fclean: clean
 re: fclean all
 
 logs:
-	docker compose logs -f
+	docker compose logs -f srcs/docker-compose.yml
 
 .PHONY: all up down clean fclean re logs
