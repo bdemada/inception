@@ -1,7 +1,7 @@
 FROM alpine:3.22.3
 
 # ── PHP 8.3 + all extensions required by WordPress ────────────────────────
-RUN apk update && apl upgrade && \
+RUN apk update && apk upgrade && \
         apk add --no-cache \
         php \
         php-fpm \
@@ -21,14 +21,15 @@ RUN apk update && apl upgrade && \
         mariadb-client
 
 # ── Download WordPress ─────────────────────────────────────────────────────
-RUN curl -fsSL https://wordpress.org/latest.tar.gz \
-      | tar -xz -C /usr/src/ \
- && chown -R nobody:nobody /usr/src/wordpress
+RUN mkdir /usr/src && \
+        curl -fsSL https://wordpress.org/latest.tar.gz \
+        | tar -xz -C /usr/src/ \
+        && chown -R nobody:nobody /usr/src/wordpress
 
 # ── Download WP-CLI ────────────────────────────────────────────────────────
 RUN curl -fsSL -o /usr/local/bin/wp \
         https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
- && chmod +x /usr/local/bin/wp
+        && chmod +x /usr/local/bin/wp
 
 # ── PHP-FPM pool config (listen on TCP so nginx can reach it) ─────────────
 #COPY www.conf /etc/php83/php-fpm.d/www.conf

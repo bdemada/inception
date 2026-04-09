@@ -1,8 +1,10 @@
-LOGIN 		?= $(shell grep LOGIN srcs/.env | cut -d '=' -f2)
+LOGIN 		?= $(shell grep LOGIN .env | cut -d '=' -f2)
+DOMAIN		?= $(shell grep DOMAIN_NAME .env | cut -d '=' -f2)
 
 DATA_DIR	= /home/$(LOGIN)/data
 
 all:
+	echo "Creating the resources for $(DOMAIN_NAME)"
 	mkdir -p $(DATA_DIR)/mariab
 	mkdir -p $(DATA_DIR)/wordpress
 
