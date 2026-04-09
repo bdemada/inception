@@ -20,19 +20,16 @@ RUN apk update && apk upgrade && \
         curl \
         mariadb-client
 
-# ── Download WordPress ─────────────────────────────────────────────────────
-RUN mkdir /usr/src && \
-        curl -fsSL https://wordpress.org/latest.tar.gz \
-        | tar -xz -C /usr/src/ \
-        && chown -R nobody:nobody /usr/src/wordpress
-
 # ── Download WP-CLI ────────────────────────────────────────────────────────
 RUN curl -fsSL -o /usr/local/bin/wp \
         https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
         && chmod +x /usr/local/bin/wp
 
 # ── PHP-FPM pool config (listen on TCP so nginx can reach it) ─────────────
-RUN find /etc -name www.conf -exec sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' {} \;
+RUN sed -i 's|listen = .*|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf
+
+RUN chown -R www-data:www-data /var/www/html \
+        chmod -R 755 /var/www/html
 
 COPY wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
