@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Starting WordPress setup..."
 
@@ -17,7 +17,7 @@ WP_USER_PASSWORD=$(read_secret /run/secrets/wp_user_password)
 WP_USER_EMAIL=$(read_secret /run/secrets/wp_user_email)
 
 #Wait for mariadb container
-while ! mysqladmin ping -h"mariadb" -u"$MYSQL_USER" -p"$MUSQL_PASSWORD" --silent; do
+while ! mysqladmin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
     echo "Waiting for MariaDB..."
     sleep 2
 done
