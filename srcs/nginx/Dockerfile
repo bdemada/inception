@@ -10,7 +10,7 @@ COPY nginx-setup.sh          /usr/local/bin/nginx-setup.sh
 RUN  chmod +x                /usr/local/bin/nginx-setup.sh
 RUN ./usr/local/bin/nginx-setup.sh
 
-COPY nginx.conf              /etc/nginx/conf.d/default.conf
+COPY nginx.conf  /etc/nginx/nginx.conf
 
 EXPOSE 443
 

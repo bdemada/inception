@@ -1,5 +1,4 @@
 #!/bin/sh
-set -em
 
 log()  { echo "[nginx] $*"; }
 
