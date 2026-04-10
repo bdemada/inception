@@ -2,10 +2,17 @@
 
 echo "Starting WordPress setup..."
 
+# ── Helpers ────────────────────────────────────────────────────────────────
+log()  { echo "[WordPress] $*"; }
+fail() { echo "[WordPress] ERROR: $*" >&2; exit 1; }
+
 read_secret() {
     [ -f "$1" ] || fail "Secret file not found: $1"
-    cat "$1"
+    tr -d '\r\n' < "$1"
 }
+
+# ── Load secrets ───────────────────────────────────────────────────────────
+###
 
 DB_ROOT_PASSWORD=$(read_secret /run/secrets/db_root_password)
 DB_NAME=$(read_secret         /run/secrets/db_name)
@@ -20,46 +27,54 @@ WP_USER_EMAIL=$(read_secret /run/secrets/wp_user_email)
 [ -z "$WP_ADMIN_USER" ] && fail "WP_ADMIN_USER not set in environment"
 [ -z "$WP_USER" ] && fail "WP_USER not set in environment"
 
-#Wait for mariadb container
-while ! /usr/bin/mariadb-admin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
-    echo "Waiting for MariaDB..."
+# ── Wait for mariadb container ───────────────────────────────────────────
+while ! mariadb-admin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --connect-timeout=5; do
+    log "Waiting for MariaDB..."
+    ping -c 1 mariadb | head -n 2
     sleep 2
 done
 
-if [ ! -f "wp-config.php" ]; then
-    echo "Downloading WordPress..."
-    wp core download --allow-root
+cd /var/www/html
 
-    echo "Configuring WordPress..."
-    wp config create \
+# Use wp with increased memory limit
+WP="php -d memory_limit=512M /usr/local/bin/wp --allow-root"
+
+if [ ! -f "wp-config.php" ]; then
+    log "Downloading WordPress..."
+    $WP core download
+
+    log "Configuring WordPress..."
+    $WP config create \
         --dbname=${DB_NAME} \
         --dbuser=${DB_USER} \
         --dbpass=${DB_PASSWORD} \
-        --dbhost=mariadb \
-        --allow-root
+        --dbhost=mariadb
 
-    echo "Installing WordPress"
-    wp core install \
-        --url=https://bde-mada.42.fr \
+    log "Installing WordPress..."
+    $WP core install \
+        --url=https://${DOMAIN_NAME} \
         --title="Bde-mada's Inception" \
         --admin_user=${WP_ADMIN_USER} \
         --admin_password=${WP_ADMIN_PASSWORD} \
-        --admin_email=${WP_ADMIN_EMAIL} \
-        --allow-root
+        --admin_email=${WP_ADMIN_EMAIL}
 
-    echo "Creating extra user"
-    wp user create \
+    log "Creating extra user..."
+    $WP user create \
         ${WP_USER} \
         ${WP_USER_EMAIL} \
         --role=author \
-        --user_pass=${WP_USER_PASSWORD} \
-        --allow-root
+        --user_pass=${WP_USER_PASSWORD}
 fi
 
-echo "WordPress setup complete!"
+log "WordPress setup complete!"
 
-PHP_FPM=$(find /usr/bin -name 'php-fpm*' | head -n 1)
+# Search in /usr/sbin (standard Alpine location for sbin daemons)
+PHP_FPM=$(find /usr/sbin -name 'php-fpm*' | head -n 1)
 
-echo "Starting FastCGI server ($PHP_FPM)..."
+if [ -z "$PHP_FPM" ]; then
+    fail "PHP-FPM binary not found in /usr/sbin"
+fi
+
+log "Starting FastCGI server ($PHP_FPM)..."
 
 exec $PHP_FPM -F

@@ -1,13 +1,15 @@
 #!/bin/sh
 set -e
 
+echo "Starting MariaDB setup..."
+
 # ── Helpers ────────────────────────────────────────────────────────────────
 log()  { echo "[mariadb] $*"; }
 fail() { echo "[mariadb] ERROR: $*" >&2; exit 1; }
 
 read_secret() {
     [ -f "$1" ] || fail "Secret file not found: $1"
-    cat "$1"
+    tr -d '\r\n' < "$1"
 }
 
 # ── Load secrets ───────────────────────────────────────────────────────────
@@ -64,5 +66,7 @@ SQL
 fi
 
 # ── Hand off to mysqld ─────────────────────────────────────────────────────
+log "Verifying listening interfaces:"
+netstat -lnt
 log "Starting MariaDB..."
 exec "$@"

@@ -75,7 +75,17 @@ secrets:
 # ── Named volumes ─────────────────────────────────────────────────────────
 volumes:
   mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bde-mada/data/mariadb
   wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bde-mada/data/wordpress
 
 # ── Single network ────────────────────────────────────────────────────────
 networks:

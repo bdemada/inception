@@ -14,19 +14,26 @@ all:
 	@if [ ! -f .env ]; then \
 		echo ".env file not defined❌"; \
 		echo "❗copy the .env.example file, fill the required fields, and place it on the root of the project"; \
+		exit 1; \
 		else echo ".env file found✅"; \
 	fi
-	@if [ ! -d $(DATA_DIR)/mariab ]; then \
+	@if [ ! -d secrets ]; then \
+		echo "secrets folder missing❌"; \
+		echo "❗create the secrets folder at the root of the project and add the required secret files"; \
+		exit 1; \
+		else echo "secrets folder found✅"; \
+	fi
+	@if [ ! -d $(DATA_DIR)/mariadb ]; then \
 		echo "Mariadb data folder missing❌. Creating..."; \
 		echo "⚠️You might be asked for your sudo password"; \
-		sudo mkdir -p $(DATA_DIR)/mariab; \
-		else echo "Mariadb data folder already in place✅"; \
+		sudo mkdir -p $(DATA_DIR)/mariadb; \
+		else echo "Mariadb data folder in place✅"; \
 	fi
 	@if [ ! -d $(DATA_DIR)/wordpress ]; then \
 		echo "Wordpress data folder missing❌. Creating..."; \
 		echo "⚠️You might be asked for your sudo password"; \
 		sudo mkdir -p $(DATA_DIR)/wordpress; \
-		else echo "Wordpress data folder already in place✅"; \
+		else echo "Wordpress data folder in place✅"; \
 	fi
 
 	@echo "Prerequisites validated."
