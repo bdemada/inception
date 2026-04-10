@@ -26,7 +26,7 @@ RUN curl -fsSL -o /usr/local/bin/wp \
         && chmod +x /usr/local/bin/wp
 
 # ── PHP-FPM pool config (listen on TCP so nginx can reach it) ─────────────
-RUN find /etc -name www.conf -exec sed -i 's/listen = 127.0.0.1 = 9000/listen = 9000/g' {} \;
+RUN find /etc -name www.conf -exec sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' {} \;
 
 RUN mkdir -p /var/www/html \
         && chown -R nobody:nobody /var/www/html \
