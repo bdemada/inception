@@ -16,6 +16,10 @@ WP_ADMIN_EMAIL=$(read_secret /run/secrets/wp_admin_email)
 WP_USER_PASSWORD=$(read_secret /run/secrets/wp_user_password)
 WP_USER_EMAIL=$(read_secret /run/secrets/wp_user_email)
 
+# Check environment variables from .env
+[ -z "$WP_ADMIN_USER" ] && fail "WP_ADMIN_USER not set in environment"
+[ -z "$WP_USER" ] && fail "WP_USER not set in environment"
+
 #Wait for mariadb container
 while ! /usr/bin/mariadb-admin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
     echo "Waiting for MariaDB..."

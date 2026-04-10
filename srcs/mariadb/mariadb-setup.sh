@@ -33,7 +33,7 @@ if [ ! -d "${DATA_DIR}/mysql" ]; then
 
     # Wait until the socket is up. Using mariadb-admin instead of mysqladmin to avoid deprecation warning
     i=0
-    while ! ./usr/bin/mariadb-admin --socket=/run/mysqld/mysqld.sock ping --silent 2>/dev/null; do
+    while ! /usr/bin/mariadb-admin --socket=/run/mysqld/mysqld.sock ping --silent 2>/dev/null; do
         i=$((i+1))
         [ $i -lt 30 ] || fail "Temporary server did not start in time."
         sleep 1
@@ -57,7 +57,7 @@ FLUSH PRIVILEGES;
 SQL
 
     log "Shutting down temporary server..."
-    ./usr/bin/mariadb-admin --socket=/run/mysqld/mysqld.sock \
+    /usr/bin/mariadb-admin --socket=/run/mysqld/mysqld.sock \
                -u root -p"${DB_ROOT_PASSWORD}" shutdown
     wait "${TEMP_PID}"
     log "Initialisation complete."
