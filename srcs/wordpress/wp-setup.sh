@@ -17,7 +17,7 @@ WP_USER_PASSWORD=$(read_secret /run/secrets/wp_user_password)
 WP_USER_EMAIL=$(read_secret /run/secrets/wp_user_email)
 
 #Wait for mariadb container
-while ! mysqladmin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
+while ! /usr/bin/mariadb-admin ping -h"mariadb" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
     echo "Waiting for MariaDB..."
     sleep 2
 done
