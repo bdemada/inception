@@ -3,7 +3,17 @@
 ### Environment Setup:
 To configure your codebase:
 1. Formulate the `.env`in the `srcs\` directory, based on the .env.example file and fill in the necessary values.
-2. Cretate the `/home/<your_username>/data/mariadb` and `/home/<your_username>/data/wordpress` directories manually on your local machine to store the database and WordPress data if Makefile permissions fault. Ensure Doocker runtime can bind against local host directories securely.
+2. Create the secrets files in the `secrets\` directory, based on the secrets.example file and fill in the necessary values.:
+   * `db_name`
+   * `db_user`
+   * `db_password`
+   * `db_root_password`
+   * `wp_admin_password`
+   * `wp_admin_email`
+   * `wp_user`
+   * `wp_user_password`
+   * `wp_user_email`
+**NOTE**: Creaate the `/home/<your_username>/data/mariadb` and `/home/<your_username>/data/wordpress` directories manually on your local machine to store the database and WordPress data if Makefile permissions fault. Ensure Doocker runtime can bind against local host directories securely.
 
 ### Building and Running the Application:
 1. Navigate to the root directory of the project in your terminal.
