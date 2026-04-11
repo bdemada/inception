@@ -56,8 +56,8 @@ clean:
 fclean: clean
 	docker system prune -af
 	echo "❗You might be asked for your sudo password"; \
-	sudo rm -rf $(DATA_DIR)/mariadb/*
-	sudo rm -rf $(DATA_DIR)/wordpress/*
+	sudo rm -rf $(DATA_DIR)/mariadb/
+	sudo rm -rf $(DATA_DIR)/wordpress/
 
 re: fclean all
 
