@@ -6,7 +6,7 @@ all:
 	@echo "Checking the prerequisites:"
 	@if ! grep -q "$(DOMAIN)" /etc/hosts; then \
 		echo "Adding $(DOMAIN) to hosts file (/etc/hosts)"; \
-		echo "⚠️You might be asked for your sudo password"; \
+		echo "❗You might be asked for your sudo password"; \
 		sudo sh -c 'echo "127.0.0.1 $(DOMAIN)" >> /etc/hosts'; \
 		echo "Domain added to hosts file✅"; \
 		else echo "Domain already in hosts file✅"; \
@@ -25,13 +25,13 @@ all:
 	fi
 	@if [ ! -d $(DATA_DIR)/mariadb ]; then \
 		echo "Mariadb data folder missing❌. Creating..."; \
-		echo "⚠️You might be asked for your sudo password"; \
+		echo "❗You might be asked for your sudo password"; \
 		sudo mkdir -p $(DATA_DIR)/mariadb; \
 		else echo "Mariadb data folder in place✅"; \
 	fi
 	@if [ ! -d $(DATA_DIR)/wordpress ]; then \
 		echo "Wordpress data folder missing❌. Creating..."; \
-		echo "⚠️You might be asked for your sudo password"; \
+		echo "❗You might be asked for your sudo password"; \
 		sudo mkdir -p $(DATA_DIR)/wordpress; \
 		else echo "Wordpress data folder in place✅"; \
 	fi
@@ -55,7 +55,7 @@ clean:
 
 fclean: clean
 	docker system prune -af
-	echo "⚠️You might be asked for your sudo password"; \
+	echo "❗You might be asked for your sudo password"; \
 	sudo rm -rf $(DATA_DIR)/mariadb/*
 	sudo rm -rf $(DATA_DIR)/wordpress/*
 
