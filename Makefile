@@ -54,9 +54,10 @@ clean:
 	docker compose -f srcs/docker-compose.yml -p srcs down --rmi all -v
 
 fclean: clean
-	rm -rf $(DATA_DIR)/mariadb/*
-	rm -rf $(DATA_DIR)/wordpress/*
 	docker system prune -af
+	echo "⚠️You might be asked for your sudo password"; \
+	sudo rm -rf $(DATA_DIR)/mariadb/*
+	sudo rm -rf $(DATA_DIR)/wordpress/*
 
 re: fclean all
 
